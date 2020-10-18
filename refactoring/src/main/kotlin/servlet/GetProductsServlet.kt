@@ -1,6 +1,7 @@
 package ru.akirakozov.sd.refactoring.servlet
 
 import ru.akirakozov.sd.refactoring.util.use
+import java.sql.Connection
 import java.sql.DriverManager
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
@@ -8,7 +9,7 @@ import javax.servlet.http.HttpServletResponse
 
 class GetProductsServlet : HttpServlet() {
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
-        DriverManager.getConnection("jdbc:sqlite:test.db").use { c ->
+        getConnection().use { c ->
             val stmt = c.createStatement()
             val rs = stmt.executeQuery("SELECT * FROM PRODUCT")
             response.writer.println("<html><body>")
@@ -25,4 +26,7 @@ class GetProductsServlet : HttpServlet() {
         response.contentType = "text/html"
         response.status = HttpServletResponse.SC_OK
     }
+
+    fun getConnection(): Connection = DriverManager.getConnection("jdbc:sqlite:test.db")
+
 }

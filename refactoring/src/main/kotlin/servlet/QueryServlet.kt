@@ -1,6 +1,7 @@
 package ru.akirakozov.sd.refactoring.servlet
 
 import ru.akirakozov.sd.refactoring.util.use
+import java.sql.Connection
 import java.sql.DriverManager
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
@@ -10,7 +11,7 @@ class QueryServlet : HttpServlet() {
     override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
         when (val command = request.getParameter("command")) {
             "max" -> {
-                DriverManager.getConnection("jdbc:sqlite:test.db").use { c ->
+                getConnection().use { c ->
                     val stmt = c.createStatement()
                     val rs = stmt.executeQuery("SELECT * FROM PRODUCT ORDER BY PRICE DESC LIMIT 1")
                     response.writer.println("<html><body>")
@@ -26,7 +27,7 @@ class QueryServlet : HttpServlet() {
                 }
             }
             "min" -> {
-                DriverManager.getConnection("jdbc:sqlite:test.db").use { c ->
+                getConnection().use { c ->
                     val stmt = c.createStatement()
                     val rs = stmt.executeQuery("SELECT * FROM PRODUCT ORDER BY PRICE LIMIT 1")
                     response.writer.println("<html><body>")
@@ -42,7 +43,7 @@ class QueryServlet : HttpServlet() {
                 }
             }
             "sum" -> {
-                DriverManager.getConnection("jdbc:sqlite:test.db").use { c ->
+                getConnection().use { c ->
                     val stmt = c.createStatement()
                     val rs = stmt.executeQuery("SELECT SUM(price) FROM PRODUCT")
                     response.writer.println("<html><body>")
@@ -56,7 +57,7 @@ class QueryServlet : HttpServlet() {
                 }
             }
             "count" -> {
-                DriverManager.getConnection("jdbc:sqlite:test.db").use { c ->
+                getConnection().use { c ->
                     val stmt = c.createStatement()
                     val rs = stmt.executeQuery("SELECT COUNT(*) FROM PRODUCT")
                     response.writer.println("<html><body>")
@@ -76,4 +77,7 @@ class QueryServlet : HttpServlet() {
         response.contentType = "text/html"
         response.status = HttpServletResponse.SC_OK
     }
+
+    fun getConnection(): Connection = DriverManager.getConnection("jdbc:sqlite:test.db")
+
 }

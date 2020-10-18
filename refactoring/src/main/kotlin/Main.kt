@@ -12,7 +12,7 @@ import java.sql.DriverManager
 /**
  * @author akirakozov
  */
-fun main(args: Array<String>) {
+fun main() {
     DriverManager.getConnection("jdbc:sqlite:test.db").use { c ->
         val sql = "CREATE TABLE IF NOT EXISTS PRODUCT" +
                 "(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
