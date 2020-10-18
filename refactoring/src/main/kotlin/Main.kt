@@ -12,29 +12,26 @@ import java.sql.DriverManager
 /**
  * @author akirakozov
  */
-object Main {
-    @Throws(Exception::class)
-    @JvmStatic
-    fun main(args: Array<String>) {
-        DriverManager.getConnection("jdbc:sqlite:test.db").use { c ->
-            val sql = "CREATE TABLE IF NOT EXISTS PRODUCT" +
-                    "(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                    " NAME           TEXT    NOT NULL, " +
-                    " PRICE          INT     NOT NULL)"
-            val stmt = c.createStatement()
-            stmt.executeUpdate(sql)
-            stmt.close()
-        }
-        val server = Server(8081)
-        val context = ServletContextHandler(ServletContextHandler.SESSIONS)
-        context.contextPath = "/"
-        server.handler = context
-        context.addServlet(ServletHolder(AddProductServlet()), "/add-product")
-        context.addServlet(ServletHolder(GetProductsServlet()), "/get-products")
-        context.addServlet(ServletHolder(QueryServlet()), "/query")
-        server.start()
-        server.join()
+fun main(args: Array<String>) {
+    DriverManager.getConnection("jdbc:sqlite:test.db").use { c ->
+        val sql = "CREATE TABLE IF NOT EXISTS PRODUCT" +
+                "(ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                " NAME           TEXT    NOT NULL, " +
+                " PRICE          INT     NOT NULL)"
+        val stmt = c.createStatement()
+        stmt.executeUpdate(sql)
+        stmt.close()
     }
+    val server = Server(8081)
+    val context = ServletContextHandler(ServletContextHandler.SESSIONS)
+    context.contextPath = "/"
+    server.handler = context
+    context.addServlet(ServletHolder(AddProductServlet()), "/add-product")
+    context.addServlet(ServletHolder(GetProductsServlet()), "/get-products")
+    context.addServlet(ServletHolder(QueryServlet()), "/query")
+    server.start()
+    server.join()
 }
+
 
 
