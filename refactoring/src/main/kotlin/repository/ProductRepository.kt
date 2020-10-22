@@ -27,45 +27,36 @@ class ProductRepository {
         return resultList
     }
 
-    fun getProductWithMaxPrice(): Product? {
+    fun getProductWithMaxPrice(): Product {
         val query = "SELECT * FROM PRODUCT ORDER BY PRICE DESC LIMIT 1"
         val statement = connection.createStatement()
         val resultSet = statement.executeQuery(query)
-        return if (resultSet.next()) {
+        return resultSet.next().let {
             Product(resultSet.getString("name"), resultSet.getInt("price"))
-        } else {
-            null
         }
     }
 
-    fun getProductWithMinPrice(): Product? {
+    fun getProductWithMinPrice(): Product {
         val query = "SELECT * FROM PRODUCT ORDER BY PRICE LIMIT 1"
         val statement = connection.createStatement()
         val resultSet = statement.executeQuery(query)
-        return if (resultSet.next()) {
-            Product(resultSet.getString("name"), resultSet.getInt("price"))
-        } else {
-            null
-        }
+        resultSet.next()
+        return Product(resultSet.getString("name"), resultSet.getInt("price"))
     }
 
-    fun getAllPrices(): List<Int> {
-        val query = "SELECT price FROM PRODUCT"
+    fun getTotalPrice(): Int {
+        val query = "SELECT SUM(price) FROM PRODUCT"
         val statement = connection.createStatement()
         val resultSet = statement.executeQuery(query)
-        val resultList = mutableListOf<Int>()
-
-        while (resultSet.next()) {
-            resultSet.getInt(1)
-        }
-
-        return resultList
+        resultSet.next()
+        return resultSet.getInt(1)
     }
 
     fun getCount(): Int {
         val query = "SELECT COUNT(*) FROM PRODUCT"
         val statement = connection.createStatement()
         val resultSet = statement.executeQuery(query)
-        return resultSet.next().let { resultSet.getInt(1) }
+        resultSet.next()
+        return resultSet.getInt(1)
     }
 }
