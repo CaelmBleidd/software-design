@@ -25,7 +25,7 @@ open class VkClient(open val host: String) {
             if (hashTag.startsWith("#")) hashTag else "#$hashTag",
             StandardCharsets.UTF_8.name()
         )
-        val startTime = Instant.now().epochSecond - hours * TimeUnit.HOURS.toSeconds(hours.toLong())
+        val startTime = Instant.now().epochSecond - TimeUnit.HOURS.toSeconds(hours.toLong())
         return "https://$host/method/newsfeed.search?" +
                 "start_time=$startTime" +
                 "&count=200&q=$encodedHashTag" +

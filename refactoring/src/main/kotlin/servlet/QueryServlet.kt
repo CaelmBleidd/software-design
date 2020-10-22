@@ -1,17 +1,16 @@
 package ru.akirakozov.sd.refactoring.servlet
 
-import ru.akirakozov.sd.refactoring.util.use
-import java.sql.Connection
 import java.sql.DriverManager
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import ru.akirakozov.sd.refactoring.util.use
 
-class QueryServlet : HttpServlet() {
-    override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
+open class QueryServlet : HttpServlet() {
+    public override fun doGet(request: HttpServletRequest, response: HttpServletResponse) {
         when (val command = request.getParameter("command")) {
             "max" -> {
-                getConnection().use { c ->
+                DriverManager.getConnection("jdbc:sqlite:test.db").use { c ->
                     val stmt = c.createStatement()
                     val rs = stmt.executeQuery("SELECT * FROM PRODUCT ORDER BY PRICE DESC LIMIT 1")
                     response.writer.println("<html><body>")
@@ -27,7 +26,7 @@ class QueryServlet : HttpServlet() {
                 }
             }
             "min" -> {
-                getConnection().use { c ->
+                DriverManager.getConnection("jdbc:sqlite:test.db").use { c ->
                     val stmt = c.createStatement()
                     val rs = stmt.executeQuery("SELECT * FROM PRODUCT ORDER BY PRICE LIMIT 1")
                     response.writer.println("<html><body>")
@@ -43,7 +42,7 @@ class QueryServlet : HttpServlet() {
                 }
             }
             "sum" -> {
-                getConnection().use { c ->
+                DriverManager.getConnection("jdbc:sqlite:test.db").use { c ->
                     val stmt = c.createStatement()
                     val rs = stmt.executeQuery("SELECT SUM(price) FROM PRODUCT")
                     response.writer.println("<html><body>")
@@ -57,7 +56,7 @@ class QueryServlet : HttpServlet() {
                 }
             }
             "count" -> {
-                getConnection().use { c ->
+                DriverManager.getConnection("jdbc:sqlite:test.db").use { c ->
                     val stmt = c.createStatement()
                     val rs = stmt.executeQuery("SELECT COUNT(*) FROM PRODUCT")
                     response.writer.println("<html><body>")
@@ -77,7 +76,4 @@ class QueryServlet : HttpServlet() {
         response.contentType = "text/html"
         response.status = HttpServletResponse.SC_OK
     }
-
-    fun getConnection(): Connection = DriverManager.getConnection("jdbc:sqlite:test.db")
-
 }

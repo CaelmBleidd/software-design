@@ -12,7 +12,7 @@ open class AddProductServlet : HttpServlet() {
         val name = request.getParameter("name")
         val price = request.getParameter("price")
 
-        getConnection().use { c ->
+        DriverManager.getConnection("jdbc:sqlite:test.db").use { c ->
             val sql = "INSERT INTO PRODUCT (NAME, PRICE) VALUES (\"$name\", $price)"
             val stmt = c.createStatement()
             stmt.executeUpdate(sql)
@@ -23,6 +23,4 @@ open class AddProductServlet : HttpServlet() {
         response.status = HttpServletResponse.SC_OK
         response.writer.println("OK")
     }
-
-    fun getConnection(): Connection = DriverManager.getConnection("jdbc:sqlite:test.db")
 }

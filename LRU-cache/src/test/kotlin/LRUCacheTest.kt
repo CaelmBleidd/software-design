@@ -1,12 +1,13 @@
+import java.util.ArrayList
+import java.util.LinkedHashMap
+import java.util.Random
+import kotlin.math.abs
 import org.junit.Assert
 import org.junit.Test
-import java.util.*
-import kotlin.math.abs
 
 
 class LRUCacheTest {
-    private class LinkedHashMapCache<K, V> internal constructor() :
-        LinkedHashMap<K, V>(MAX_ENTRIES, 0.5f, true) {
+    private class LinkedHashMapCache<K, V> : LinkedHashMap<K, V>(MAX_ENTRIES, 0.5f, true) {
         override fun removeEldestEntry(eldest: Map.Entry<K, V>): Boolean {
             return size > MAX_ENTRIES
         }
