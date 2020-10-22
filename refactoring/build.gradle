@@ -16,6 +16,6 @@ dependencies {
     compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.32.v20200930'
     compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.32.v20200930'
     implementation 'com.google.code.gson:gson:2.8.0'
-
+    implementation 'org.xerial:sqlite-jdbc:3.21.0.1'
     testImplementation "io.mockk:mockk:1.10.2"
 }
