@@ -1,6 +1,7 @@
 package ru.akirakozov.sd.refactoring.servlet
 
 import ru.akirakozov.sd.refactoring.service.ProductService
+import ru.akirakozov.sd.refactoring.util.createForSingle
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -12,38 +13,24 @@ open class QueryServlet : HttpServlet() {
         when (val command = request.getParameter("command")) {
             "max" -> {
                 val productWithMaxPrice = productService.getProductWithMaxPrice()
-                response.writer.println("<html><body>")
-                response.writer.println("<h1>Product with max price: </h1>")
-                response.writer.println("${productWithMaxPrice.name}\t${productWithMaxPrice.price}</br>")
-                response.writer.println("</body></html>")
-
+                response.createForSingle(productWithMaxPrice, "<h1>Product with max price: </h1>")
             }
             "min" -> {
                 val productWithMinPrice = productService.getProductWithMinPrice()
-                response.writer.println("<html><body>")
-                response.writer.println("<h1>Product with min price: </h1>")
-                response.writer.println("${productWithMinPrice.name}\t${productWithMinPrice.price}</br>")
-                response.writer.println("</body></html>")
+                response.createForSingle(productWithMinPrice, "<h1>Product with min price: </h1>")
             }
             "sum" -> {
                 val totalPrice = productService.getTotalPrice()
-                response.writer.println("<html><body>")
-                response.writer.println("Summary price: ")
-                response.writer.println(totalPrice)
-                response.writer.println("</body></html>")
+                response.createForSingle(totalPrice, "Summary price: ")
             }
             "count" -> {
                 val count = productService.getCount()
-                response.writer.println("<html><body>")
-                response.writer.println("Number of products: ")
-                response.writer.println(count)
-                response.writer.println("</body></html>")
+                response.createForSingle(count, "Number of products: ")
             }
             else -> {
                 response.writer.println("Unknown command: $command")
             }
         }
-        response.contentType = "text/html"
-        response.status = HttpServletResponse.SC_OK
+
     }
 }
