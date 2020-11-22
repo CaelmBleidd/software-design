@@ -1,0 +1,120 @@
+<!--suppress JSUnresolvedVariable -->
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<head>
+    <title>Todo List</title>
+</head>
+
+<body>
+All tasks:
+<ul id="tasks">
+</ul>
+Add task:
+<form method="post" action="/api/v1/task">
+    <label for="task__name">Name:</label>
+    <input id="task__name" name="name">
+    <label for="task__description">Description:</label>
+    <input id="task__description" name="description">
+    <input type="hidden" value="false" name="completed">
+    <button type="submit">Add</button>
+</form>
+Mark task as done:
+<form onsubmit="markTaskAsDone()">
+    <label for="task-done__id">Id:</label>
+    <input id="task-done__id" name="id">
+    <button type="submit">Done</button>
+</form>
+Delete task:
+<form onsubmit="deleteTask()">
+    <label for="task__id">Id:</label>
+    <input id="task__id" name="id">
+    <button type="submit">Delete</button>
+</form>
+All task lists:
+<ul id="task-lists">
+</ul>
+Add task list:
+<form method="post" action="/api/v1/taskList">
+    <label for="task-list__name">Name:</label>
+    <input id="task-list__name" name="name">
+    <label for="task-list__description">Description:</label>
+    <input id="task-list__description" name="description">
+    <button type="submit">Add</button>
+</form>
+Add task to task list:
+<form onsubmit="addTaskToTaskList()">
+    <label for="task-list__task-list-id">Task list ID:</label>
+    <input id="task-list__task-list-id" name="listId">
+    <label for="task-list__task-id">Task ID:</label>
+    <input id="task-list__task-id" name="taskId">
+    <button type="submit">Add</button>
+</form>
+Delete task list:
+<form onsubmit="deleteTaskList()">
+    <label for="task-list__id">Id:</label>
+    <input id="task-list__id" name="id">
+    <button type="submit">Delete</button>
+</form>
+</body>
+<script>
+    fetch("/api/v1/task")
+        .then(response => response.json())
+        .then(data => {
+            const tasksList = document.getElementById("tasks")
+            for (const task of data) {
+                tasksList.innerHTML += `<li>${task.id},\t${task.name},\t${task.description},\t${task.completed},\t${task.createdAt}</li>`
+            }
+        })
+
+    fetch("/api/v1/taskList")
+        .then(response => response.json())
+        .then(data => {
+            const taskLists = document.getElementById("task-lists")
+            for (const taskList of data) {
+                const id = `task-list__${taskList.id}`
+                taskLists.innerHTML += `<li>${taskList.id},\t${taskList.name},\t${taskList.description},\t${taskList.createdAt}<ul id="${id}"></ul></li>`
+                const taskListTasks = document.getElementById(id)
+                for (const task of taskList.tasks) {
+                    taskListTasks.innerHTML += `<li>${task.id},\t${task.name},\t${task.description},\t${task.completed},\t${task.createdAt}</li>`
+                }
+            }
+        })
+
+    function markTaskAsDone() {
+        const id = document.getElementById("task-done__id").value
+        fetch(`/api/v1/task/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    data.completed = true
+                    fetch("/api/v1/task", {
+                        method: "put", body: JSON.stringify(data),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(() => window.location.reload())
+                }
+            })
+    }
+
+    function deleteTask() {
+        const id = document.getElementById("task__id").value
+        fetch(`/api/v1/task/${id}`, { method: "delete" }).then(() => window.location.reload())
+    }
+
+    function addTaskToTaskList() {
+        const taskListId = document.getElementById("task-list__task-list-id").value
+        const taskId = document.getElementById("task-list__task-id").value
+        fetch(`/api/v1/taskList/${taskListId}/add/${taskId}`, { method: "post" }).then(() => window.location.reload())
+    }
+
+    function deleteTaskList() {
+        const id = document.getElementById("task-list__id").value
+        fetch(`/api/v1/taskList/${id}`, { method: "delete" }).then(() => window.location.reload())
+    }
+
+
+</script>
+
+</html>
