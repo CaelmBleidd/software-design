@@ -7,55 +7,79 @@
 </head>
 
 <body>
-All tasks:
-<ul id="tasks">
-</ul>
-Add task:
-<form method="post" action="/api/v1/task">
-    <label for="task__name">Name:</label>
-    <input id="task__name" name="name">
-    <label for="task__description">Description:</label>
-    <input id="task__description" name="description">
-    <input type="hidden" value="false" name="completed">
-    <button type="submit">Add</button>
-</form>
-Mark task as done:
-<form onsubmit="markTaskAsDone()">
-    <label for="task-done__id">Id:</label>
-    <input id="task-done__id" name="id">
-    <button type="submit">Done</button>
-</form>
-Delete task:
-<form onsubmit="deleteTask()">
-    <label for="task__id">Id:</label>
-    <input id="task__id" name="id">
-    <button type="submit">Delete</button>
-</form>
-All task lists:
-<ul id="task-lists">
-</ul>
-Add task list:
-<form method="post" action="/api/v1/taskList">
-    <label for="task-list__name">Name:</label>
-    <input id="task-list__name" name="name">
-    <label for="task-list__description">Description:</label>
-    <input id="task-list__description" name="description">
-    <button type="submit">Add</button>
-</form>
-Add task to task list:
-<form onsubmit="addTaskToTaskList()">
-    <label for="task-list__task-list-id">Task list ID:</label>
-    <input id="task-list__task-list-id" name="listId">
-    <label for="task-list__task-id">Task ID:</label>
-    <input id="task-list__task-id" name="taskId">
-    <button type="submit">Add</button>
-</form>
-Delete task list:
-<form onsubmit="deleteTaskList()">
-    <label for="task-list__id">Id:</label>
-    <input id="task-list__id" name="id">
-    <button type="submit">Delete</button>
-</form>
+<div style="display: flex;">
+    <div>
+        <h2>All tasks:</h2>
+        <ul id="tasks">
+        </ul>
+        <h3>Add task:</h3>
+        <form method="post" action="/api/v1/task">
+            <div style="display: flex; flex-direction: column;">
+                <div>
+                    <label for="task__name">Name:</label>
+                    <input id="task__name" name="name">
+                </div>
+                <div style="margin-top: 5px;">
+                    <label for="task__description">Description:</label>
+                    <input id="task__description" name="description">
+                    <input type="hidden" value="false" name="completed">
+                    <button type="submit">Add</button>
+                </div>
+            </div>
+        </form>
+        <h3>Mark task as done:</h3>
+        <form onsubmit="markTaskAsDone()">
+            <label for="task-done__id">Id:</label>
+            <input id="task-done__id" name="id">
+            <button type="submit">Done</button>
+        </form>
+        <h3>Delete task:</h3>
+        <form onsubmit="deleteTask()">
+            <label for="task__id">Id:</label>
+            <input id="task__id" name="id">
+            <button type="submit">Delete</button>
+        </form>
+    </div>
+    <div style="margin-left: 200px;">
+        <h2>All task lists:</h2>
+        <ul id="task-lists">
+        </ul>
+        <h3>Add task list:</h3>
+        <form method="post" action="/api/v1/taskList">
+            <div style="display: flex; flex-direction: column;">
+                <div>
+                    <label for="task-list__name">Name:</label>
+                    <input id="task-list__name" name="name">
+                </div>
+                <div style="margin-top: 5px;">
+                    <label for="task-list__description">Description:</label>
+                    <input id="task-list__description" name="description">
+                    <button type="submit">Add</button>
+                </div>
+            </div>
+        </form>
+        <h3>Add task to task list:</h3>
+        <form onsubmit="addTaskToTaskList()">
+            <div style="display: flex; flex-direction: column;">
+                <div>
+                    <label for="task-list__task-list-id">Task list ID:</label>
+                    <input id="task-list__task-list-id" name="listId">
+                </div>
+                <div style="margin-top: 5px;">
+                    <label for="task-list__task-id">Task ID:</label>
+                    <input id="task-list__task-id" name="taskId">
+                    <button type="submit">Add</button>
+                </div>
+            </div>
+        </form>
+        <h3>Delete task list:</h3>
+        <form onsubmit="deleteTaskList()">
+            <label for="task-list__id">Id:</label>
+            <input id="task-list__id" name="id">
+            <button type="submit">Delete</button>
+        </form>
+    </div>
+</div>
 </body>
 <script>
     fetch("/api/v1/task")
@@ -113,6 +137,18 @@ Delete task list:
         const id = document.getElementById("task-list__id").value
         fetch(`/api/v1/taskList/${id}`, { method: "delete" }).then(() => window.location.reload())
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 </script>
